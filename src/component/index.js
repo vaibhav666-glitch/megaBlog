@@ -14,6 +14,7 @@ import AuthLayout from "./AuthLayout";
 import Input from "./Input";
 
 export {
+    Select,
     Header,
     Footer,
     Container,
@@ -27,5 +28,5 @@ export {
     PostCard,
     AuthLayout, 
     Input,
-    Select,
+    
 }

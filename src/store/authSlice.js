@@ -10,7 +10,9 @@ const authSlice=createSlice({
     initialState,
     reducers:{
         login:(state,action)=>{
+
             state.status=true;
+            //console.log("am inside stor ", state.status)
             state.userData=action.payload.userData;
         },
         logout:(state)=>{

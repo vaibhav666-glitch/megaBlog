@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import authService from './appwrite/auth'
 import { login,logout } from './store/authSlice'
 import {Footer,Header} from './component'
+import { Outlet } from 'react-router-dom'
 
 function App() {
   const [loading ,setLoading]=useState(true)
@@ -13,8 +14,9 @@ function App() {
   useEffect(()=>{
       authService.getCurrentUser()
       .then((userData)=>{
+        //console.log("am user data for app.jsx", userData)
         if(userData)
-          dispatch(login(userData))
+          dispatch(login({userData}))
         else
           dispatch(logout())
 
@@ -25,11 +27,12 @@ function App() {
   },[])
   
 
-  return !loading?( <div className='min-h-screen flex  content-between bg-gray-500 ' >
+  return !loading?( 
+    <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>
     <div className='w-full block'>
       <Header/>
       <main>
-        {/* outlet */}
+        TODO: <Outlet/>
       </main>
       <Footer/>
     </div>

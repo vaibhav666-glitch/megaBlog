@@ -1,39 +1,40 @@
-import config from "../config/config";
-import { Client,ID,Databases,Storage,Query } from "appwrite";
+import config from "../config/config.js";
+import { Client, ID, Databases, Storage, Query } from "appwrite";
 
 export class Service{
-    client=new Client();
+    client = new Client();
     databases;
     bucket;
     constructor(){
-        this.client.setEndpoint(config.appwriteUrl);
-        this.client.setProject(config.appwriteProjectId)
-        this.databases=new Databases(this.client)
-        this.bucket=new Storage(this.client)
+        this.client
+        .setEndpoint(config.appwriteUrl)
+        .setProject(config.appwriteProjectId);
+        this.databases = new Databases(this.client);
+        this.bucket = new Storage(this.client);
+
     }
 
-    async createPost({title,slug,content,featuredImage,status,userId}){
-        try{
+    async createPost({title, slug, content, featuredImage, status, userId}){
+        try {
             return await this.databases.createDocument(
-              config.appwriteDatabaseId,
-              config.appwriteCollectionId,
-              slug,
-              {
-                title,
-                content,
-                featuredImage,
-                status,
-                userId
-              }
+                config.appwriteDatabaseId,
+                config.appwriteCollectionId,
+                slug,
+                {
+                    title,
+                    content,
+                    featuredImage,
+                    status,
+                    userId,
+                }
             )
-        }
-        catch(err){
-            console.log(err)
+        } catch (error) {
+            console.log("Appwrite serive :: getCurrentUser :: error", error);
         }
     }
 
-    async updatePost(slug,{title,content,featuredImage,status}){
-        try{
+    async updatePost(slug, {title, content, featuredImage, status}){
+        try {
             return await this.databases.updateDocument(
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
@@ -43,81 +44,77 @@ export class Service{
                     content,
                     featuredImage,
                     status,
-
                 }
             )
-        }
-        catch(err){
-            console.log(err);
+        } catch (error) {
+            console.log("Appwrite serive :: getCurrentUser :: error", error);
         }
     }
 
-    async deletePost({slug}){
-        try{
+    async deletePost(slug){
+        try {
             await this.databases.deleteDocument(
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 slug
             )
             return true;
-        }
-        catch(err){
-            console.log(err);
+        } catch (error) {
+            console.log("Appwrite serive :: getCurrentUser :: error", error);
             return false;
         }
     }
 
     async getPost(slug){
-        try{
+        try {
             return await this.databases.getDocument(
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 slug
             )
-        }
-        catch(err){
-            console.log(err);
-        }
-    }
-    async getAllPost(queries=[Query.equal("status","active")]){
-        try{
-            await this.databases.listDocuments(
-                config.appwriteDatabaseId,
-                config.appwriteCollectionId,
-                queries)
-        }
-        catch(err){
-            console.log(err);
-            return false
+        } catch (error) {
+            console.log("Appwrite serive :: getCurrentUser :: error", error);
+            return false;
         }
     }
 
-    // file upload service
+    async getPosts(queries = [Query.equal("status", "active")]){
+        try {
+            return await this.databases.listDocuments(
+                config.appwriteDatabaseId,
+                config.appwriteCollectionId,
+                queries,
+            )
+        } catch (error) {
+            console.log("Appwrite serive :: getCurrentUser :: error", error);
+            return false;
+        }
+    }
+
+    //file upload service
+
     async uploadFile(file){
-        try{
+        try {
             return await this.bucket.createFile(
                 config.appwriteBucketId,
                 ID.unique(),
                 file
             )
-        }
-        catch(err){
-            console.log(err);
-            return false
+        } catch (error) {
+            console.log("Appwrite serive :: getCurrentUser :: error", error);
+            return false;
         }
     }
 
     async deleteFile(fileId){
-        try{
+        try {
             await this.bucket.deleteFile(
                 config.appwriteBucketId,
                 fileId
             )
             return true;
-        }
-        catch(err)
-        {
-            console.log(err);
+        } catch (error) {
+            console.log("Appwrite serive :: getCurrentUser :: error", error);
             return false;
         }
     }
@@ -129,6 +126,8 @@ export class Service{
         )
     }
 
+
 }
-const service =new Service();
-export default service;
+
+const service = new Service()
+export default service
